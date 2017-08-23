@@ -76,13 +76,13 @@ namespace Networking_server
                 myCommand.CommandText = "mysp_CreateUser";
 
                 SqlParameter paramUserName = new SqlParameter();
-                paramUserName.ParameterName = "@userName";
+                paramUserName.ParameterName = "@username";
                 paramUserName.DbType = System.Data.DbType.String;
                 paramUserName.Value = name;
                 myCommand.Parameters.Add(paramUserName);
 
                 SqlParameter paramPassword = new SqlParameter();
-                paramPassword.ParameterName = "@userpassword";
+                paramPassword.ParameterName = "@password";
                 paramPassword.DbType = System.Data.DbType.String;
                 paramPassword.Value = password;
                 myCommand.Parameters.Add(paramPassword);

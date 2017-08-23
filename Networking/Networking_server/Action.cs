@@ -17,7 +17,7 @@ namespace Networking_server
                     server.Broadcast(client, message);//Beta version
                     break;
                 case "sendMessage":
-                    server.Broadcast(client, message);//Beta version
+                    server.Broadcast(client, message);
                     break;
                 case "login":
                     Console.WriteLine("Någon försöker logga in");
