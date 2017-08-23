@@ -66,13 +66,12 @@ namespace Networking_server
             }
         }
 
-        public void BroadcastLogin(ClientHandler client, Message message)
+        public static void LoginVerification(ClientHandler client, Message message)
         {
 
             NetworkStream n = client.tcpclient.GetStream();
             BinaryWriter w = new BinaryWriter(n);
-            message.Action = "login";
-            message.UserMessage = $"{}";
+
             string output = JsonConvert.SerializeObject(message);
             w.Write(output);
 

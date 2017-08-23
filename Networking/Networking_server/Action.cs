@@ -17,7 +17,9 @@ namespace Networking_server
                     server.Broadcast(client, message);//Beta version
                     break;
                 case "login":
-                    DataBaseConnection.LoginDB(message.UserName, message.UserMessage);
+                    bool responsFromDB = DataBaseConnection.LoginDB(message.UserName, message.UserMessage);
+                    message.UserMessage = responsFromDB.ToString();
+                    Server.LoginVerification(client, message);
                     break;
 
 
