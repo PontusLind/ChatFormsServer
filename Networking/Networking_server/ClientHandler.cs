@@ -21,7 +21,7 @@ namespace Networking_server
             this.myServer = server;
         }
 
-            public void Run()
+        public void Run()
         {
 
             Message message = new Message();
@@ -32,8 +32,8 @@ namespace Networking_server
                 {
                     NetworkStream n = tcpclient.GetStream();
                     message = JsonConvert.DeserializeObject<Message>(new BinaryReader(n).ReadString());
-                    //Action.CheckAction(this, message);
-                    myServer.Broadcast(this, message);
+                    Action.CheckAction(myServer, this, message);
+                    //myServer.Broadcast(this, message);
                     Console.WriteLine($"{message.UserName} sent a message: {message.UserMessage}");
                 }
                 catch (Exception ex)

@@ -9,12 +9,17 @@ namespace Networking_server
 {
     class Action
     {
-        public static void CheckAction(Message message)
+        public static void CheckAction(Server server, ClientHandler client,  Message message)
         {
             switch (message.Action)
             {
-                case "":
+                case null:
+                    server.Broadcast(client, message);//Beta version
                     break;
+                case "login":
+                    DataBaseConnection.LoginDB(message.UserName, message.UserMessage);
+                    break;
+
 
                 default:
                     break;
