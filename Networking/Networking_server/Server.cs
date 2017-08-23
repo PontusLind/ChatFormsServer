@@ -66,7 +66,7 @@ namespace Networking_server
             }
         }
 
-        public static void LoginVerification(ClientHandler client, Message message)
+        public static void Verification(ClientHandler client, Message message)
         {
 
             NetworkStream n = client.tcpclient.GetStream();
@@ -74,15 +74,12 @@ namespace Networking_server
 
             string output = JsonConvert.SerializeObject(message);
             w.Write(output);
-
-
-
         }
 
         public void DisconnectClient(ClientHandler client)
         {
             clients.Remove(client);
-            Console.WriteLine("Client X has left the building...");
+            Console.WriteLine("A client has left the building...");
         }
     }
 

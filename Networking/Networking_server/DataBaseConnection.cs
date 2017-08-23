@@ -62,5 +62,56 @@ namespace Networking_server
                 myConnection.Close();
             }
         }
+
+        internal static bool CreateUserDB(string name, string password)
+        {
+            SqlConnection myConnection = new SqlConnection();
+            myConnection.ConnectionString = connectionString;
+            try
+            {
+                myConnection.Open();
+                SqlCommand myCommand = new SqlCommand();
+                myCommand.Connection = myConnection;
+                myCommand.CommandType = System.Data.CommandType.StoredProcedure;
+                myCommand.CommandText = "mysp_CreateUser";
+
+                SqlParameter paramUserName = new SqlParameter();
+                paramUserName.ParameterName = "@userName";
+                paramUserName.DbType = System.Data.DbType.String;
+                paramUserName.Value = name;
+                myCommand.Parameters.Add(paramUserName);
+
+                SqlParameter paramPassword = new SqlParameter();
+                paramPassword.ParameterName = "@userpassword";
+                paramPassword.DbType = System.Data.DbType.String;
+                paramPassword.Value = password;
+                myCommand.Parameters.Add(paramPassword);
+
+                SqlParameter paramSuccess = new SqlParameter();
+                paramSuccess.ParameterName = "@success";
+                paramSuccess.DbType = System.Data.DbType.Int32;
+
+                paramSuccess.Direction = System.Data.ParameterDirection.Output;
+                myCommand.Parameters.Add(paramSuccess);
+
+                SqlDataReader myReader = myCommand.ExecuteReader();
+
+                int temp = Convert.ToInt32(paramSuccess.Value);
+                if (temp == 1)
+                    return true;
+                else
+                    return false;
+            }
+            catch (Exception m)
+            {
+                Console.WriteLine($"Fel:  {m}");
+                return false;
+            }
+
+            finally
+            {
+                myConnection.Close();
+            }
+        }
     }
 }
