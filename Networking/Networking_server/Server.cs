@@ -47,11 +47,15 @@ namespace Networking_server
         {
             foreach (var client in clients)
             {
-                message.UserName = client.UserName;
-                NetworkStream n = client.tcpclient.GetStream();
-                BinaryWriter w = new BinaryWriter(n);
-                string output = JsonConvert.SerializeObject(message);
-                w.Write(output);
+                message.UserMessage += client.UserName + ";";
+            }
+
+            foreach (var client in clients)
+            {
+            NetworkStream n = client.tcpclient.GetStream();
+            BinaryWriter w = new BinaryWriter(n);
+            string output = JsonConvert.SerializeObject(message);
+            w.Write(output);
             }
         }
 
@@ -66,7 +70,7 @@ namespace Networking_server
                 w.Write(output);
 
                 if (clients.Count() == 1)
-                {                  
+                {
                     message.UserName = "Server";
                     message.UserMessage = "Sorry, you are alone...";
                     output = JsonConvert.SerializeObject(message);
