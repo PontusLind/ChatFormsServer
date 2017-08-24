@@ -82,20 +82,26 @@ namespace Networking_server
 
         internal void PrivateBroadcast(ClientHandler client, Message message)//Ej testad
         {
-            string[] resiver = message.UserMessage.Split(';');
-            message.UserMessage = resiver[1];
-            NetworkStream n = client.tcpclient.GetStream();
-            BinaryWriter w = new BinaryWriter(n);
-            string output = JsonConvert.SerializeObject(message);
-            w.Write(output);
+            try
+            {
+                string[] resiver = message.UserMessage.Split(';');
+                message.UserMessage = resiver[1];
+                NetworkStream n = client.tcpclient.GetStream();
+                BinaryWriter w = new BinaryWriter(n);
+                string output = JsonConvert.SerializeObject(message);
+                w.Write(output);
 
-            message.UserName = resiver[0];
-            client = clients.SingleOrDefault(c => c.UserName == message.UserName);
-            NetworkStream m = client.tcpclient.GetStream();
-            BinaryWriter v = new BinaryWriter(m);
-            message.UserMessage = resiver[1];
-            output = JsonConvert.SerializeObject(message);
-            v.Write(output);
+                message.UserName = resiver[0];
+                client = clients.SingleOrDefault(c => c.UserName == message.UserName);
+                n = client.tcpclient.GetStream();
+                w = new BinaryWriter(n);
+                output = JsonConvert.SerializeObject(message);
+                w.Write(output);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
 
         public static void Verification(ClientHandler client, Message message)

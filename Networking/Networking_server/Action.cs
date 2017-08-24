@@ -13,9 +13,6 @@ namespace Networking_server
         {
             switch (message.Action)
             {
-                case null:
-                    server.Broadcast(client, message);//Beta version
-                    break;
                 case "sendMessage":
                     server.Broadcast(client, message);
                     break;
