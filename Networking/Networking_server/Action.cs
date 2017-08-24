@@ -23,14 +23,18 @@ namespace Networking_server
                     Console.WriteLine("Någon försöker logga in");
                     bool responsFromDB = DataBaseConnection.LoginDB(message.UserName, message.UserMessage);
                     message.UserMessage = responsFromDB.ToString();
-                    Server.Verification(client, message);
 
-////////////////////////////////Ej testad
-
-                    if (responsFromDB == true)
+                    if (responsFromDB && !server.clients.Exists(c => c.UserName == message.UserName))
                     {
                         server.clients.Add(client);
                         client.UserName = message.UserName;
+                    }
+
+                    Server.Verification(client, message);
+
+                    if(responsFromDB)
+                    {
+                        message.UserMessage = "";
                         message.Action = "usersOnline";
                         server.UpdateContactBox(message);
                     }
@@ -40,6 +44,9 @@ namespace Networking_server
                     responsFromDB = DataBaseConnection.CreateUserDB(message.UserName, message.UserMessage);
                     message.UserMessage = responsFromDB.ToString();
                     Server.Verification(client, message);
+                    break;
+                case "sendPrivateMessage":
+                    server.PrivateBroadcast(client, message);
                     break;
                 default:
                     message.Action = "NonValidAction";

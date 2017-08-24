@@ -52,11 +52,12 @@ namespace Networking_server
 
             foreach (var client in clients)
             {
-            NetworkStream n = client.tcpclient.GetStream();
-            BinaryWriter w = new BinaryWriter(n);
-            string output = JsonConvert.SerializeObject(message);
-            w.Write(output);
+                NetworkStream n = client.tcpclient.GetStream();
+                BinaryWriter w = new BinaryWriter(n);
+                string output = JsonConvert.SerializeObject(message);
+                w.Write(output);
             }
+            Console.WriteLine("Sent list " + message.UserMessage);
         }
 
         public void Broadcast(ClientHandler client, Message message)
@@ -79,6 +80,24 @@ namespace Networking_server
             }
         }
 
+        internal void PrivateBroadcast(ClientHandler client, Message message)//Ej testad
+        {
+            string[] resiver = message.UserMessage.Split(';');
+            message.UserMessage = resiver[1];
+            NetworkStream n = client.tcpclient.GetStream();
+            BinaryWriter w = new BinaryWriter(n);
+            string output = JsonConvert.SerializeObject(message);
+            w.Write(output);
+
+            message.UserName = resiver[0];
+            client = clients.SingleOrDefault(c => c.UserName == message.UserName);
+            NetworkStream m = client.tcpclient.GetStream();
+            BinaryWriter v = new BinaryWriter(m);
+            message.UserMessage = resiver[1];
+            output = JsonConvert.SerializeObject(message);
+            v.Write(output);
+        }
+
         public static void Verification(ClientHandler client, Message message)
         {
 
@@ -91,8 +110,12 @@ namespace Networking_server
 
         public void DisconnectClient(ClientHandler client)
         {
+            Message message = new Message();
+            message.Action = "usersOnline";
             clients.Remove(client);
-            Console.WriteLine("A client has left the building...");
+            UpdateContactBox(message);
+
+            Console.WriteLine($"{client.UserName} has left the building...");
         }
     }
 
