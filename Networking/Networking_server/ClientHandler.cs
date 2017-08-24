@@ -15,6 +15,7 @@ namespace Networking_server
     {
         public TcpClient tcpclient;
         private Server myServer;
+        public string UserName { get; set; }
         public ClientHandler(TcpClient c, Server server)
         {
             tcpclient = c;
@@ -38,8 +39,6 @@ namespace Networking_server
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
-                    myServer.DisconnectClient(this);
-                    tcpclient.Close();
                     break;
                 }
 

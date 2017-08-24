@@ -14,8 +14,7 @@ namespace Networking_server
 {
     public class Server
     {
-        List<ClientHandler> clients = new List<ClientHandler>();
-        public List<UserClient> userClient = new List<UserClient>();
+        public List<ClientHandler> clients = new List<ClientHandler>();
         public void Run()
         {
             TcpListener listener = new TcpListener(IPAddress.Any, 5000);
@@ -28,7 +27,7 @@ namespace Networking_server
                 {
                     TcpClient c = listener.AcceptTcpClient();
                     ClientHandler newClient = new ClientHandler(c, this);
-                    clients.Add(newClient);
+                    //clients.Add(newClient);
                     Thread clientThread = new Thread(newClient.Run);
                     clientThread.Start();
                 }
@@ -46,10 +45,10 @@ namespace Networking_server
 
         internal void UpdateContactBox(Message message)
         {
-            foreach (var client in userClient)
+            foreach (var client in clients)
             {
                 message.UserName = client.UserName;
-                NetworkStream n = client.UserConnection.GetStream();
+                NetworkStream n = client.tcpclient.GetStream();
                 BinaryWriter w = new BinaryWriter(n);
                 string output = JsonConvert.SerializeObject(message);
                 w.Write(output);
@@ -67,13 +66,11 @@ namespace Networking_server
                 w.Write(output);
 
                 if (clients.Count() == 1)
-                {
-                    NetworkStream m = tmpClient.tcpclient.GetStream();
-                    BinaryWriter v = new BinaryWriter(m);
+                {                  
                     message.UserName = "Server";
                     message.UserMessage = "Sorry, you are alone...";
                     output = JsonConvert.SerializeObject(message);
-                    v.Write(output);
+                    w.Write(output);
                 }
             }
         }
