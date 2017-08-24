@@ -33,7 +33,6 @@ namespace Networking_server
                     NetworkStream n = tcpclient.GetStream();
                     message = JsonConvert.DeserializeObject<Message>(new BinaryReader(n).ReadString());
                     Action.CheckAction(myServer, this, message);
-                    //myServer.Broadcast(this, message);
                     Console.WriteLine($"{message.UserName} sent a message: {message.UserMessage}");
                 }
                 catch (Exception ex)

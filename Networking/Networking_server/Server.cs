@@ -15,6 +15,7 @@ namespace Networking_server
     public class Server
     {
         List<ClientHandler> clients = new List<ClientHandler>();
+        public List<UserClient> userClient = new List<UserClient>();
         public void Run()
         {
             TcpListener listener = new TcpListener(IPAddress.Any, 5000);
@@ -28,7 +29,6 @@ namespace Networking_server
                     TcpClient c = listener.AcceptTcpClient();
                     ClientHandler newClient = new ClientHandler(c, this);
                     clients.Add(newClient);
-
                     Thread clientThread = new Thread(newClient.Run);
                     clientThread.Start();
                 }
@@ -41,6 +41,18 @@ namespace Networking_server
             {
                 if (listener != null)
                     listener.Stop();
+            }
+        }
+
+        internal void UpdateContactBox(Message message)
+        {
+            foreach (var client in userClient)
+            {
+                message.UserName = client.UserName;
+                NetworkStream n = client.UserConnection.GetStream();
+                BinaryWriter w = new BinaryWriter(n);
+                string output = JsonConvert.SerializeObject(message);
+                w.Write(output);
             }
         }
 

@@ -23,6 +23,15 @@ namespace Networking_server
                     Console.WriteLine("Någon försöker logga in");
                     bool responsFromDB = DataBaseConnection.LoginDB(message.UserName, message.UserMessage);
                     message.UserMessage = responsFromDB.ToString();
+
+////////////////////////////////Ej testad
+
+                    if (responsFromDB == true)
+                    {
+                        server.userClient.Add(new UserClient(client.tcpclient, message.UserName));
+                        message.Action = "usersOnline";
+                        server.UpdateContactBox(message);
+                    }
                     Server.Verification(client, message);
                     break;
                 case "createUser":
@@ -32,6 +41,7 @@ namespace Networking_server
                     Server.Verification(client, message);
                     break;
                 default:
+                    message.Action = "NonValidAction";
                     message.UserMessage = "No server action";
                     Server.Verification(client, message);
                     break;
