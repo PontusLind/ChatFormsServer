@@ -53,7 +53,7 @@ namespace Networking_server
             }
             catch (Exception m)
             {
-                Console.WriteLine($"Fel:  {m}");
+                Console.WriteLine("Login faild in database");
                 return false;
             }
 
@@ -104,7 +104,7 @@ namespace Networking_server
             }
             catch (Exception m)
             {
-                Console.WriteLine($"Fel:  {m}");
+                Console.WriteLine("Create user faild in database");
                 return false;
             }
 

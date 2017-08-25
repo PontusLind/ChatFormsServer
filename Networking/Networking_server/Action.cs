@@ -44,6 +44,7 @@ namespace Networking_server
                     break;
                 case "createUser":
                     responsFromDB = DataBaseConnection.CreateUserDB(message.UserName, message.UserMessage);
+                    Console.WriteLine(responsFromDB);
                     message.UserMessage = responsFromDB.ToString();
                     Server.Verification(client, message);
                     break;
