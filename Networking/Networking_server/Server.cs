@@ -32,9 +32,9 @@ namespace Networking_server
                     clientThread.Start();
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine("Listener failed");
             }
             finally
             {
@@ -57,7 +57,6 @@ namespace Networking_server
                 string output = JsonConvert.SerializeObject(message);
                 w.Write(output);
             }
-            Console.WriteLine("Sent list " + message.UserMessage);
         }
 
         public void Broadcast(ClientHandler client, Message message)
@@ -85,14 +84,14 @@ namespace Networking_server
             try
             {
                 string[] resiver = message.UserMessage.Split(';');
-                message.UserMessage = resiver[1];
+                message.UserMessage = "to "+ resiver[0] + " " + resiver[1];
                 NetworkStream n = client.tcpclient.GetStream();
                 BinaryWriter w = new BinaryWriter(n);
                 string output = JsonConvert.SerializeObject(message);
                 w.Write(output);
 
-                message.UserName = resiver[0];
-                client = clients.SingleOrDefault(c => c.UserName == message.UserName);
+                client = clients.SingleOrDefault(c => c.UserName == resiver[0]);
+                message.UserMessage = "to me " + resiver[1];
                 n = client.tcpclient.GetStream();
                 w = new BinaryWriter(n);
                 output = JsonConvert.SerializeObject(message);
@@ -100,7 +99,7 @@ namespace Networking_server
             }
             catch(Exception ex)
             {
-                Console.WriteLine(ex);
+                Console.WriteLine("Private broadcast faild");
             }
         }
 
@@ -121,7 +120,7 @@ namespace Networking_server
             clients.Remove(client);
             UpdateContactBox(message);
 
-            Console.WriteLine($"{client.UserName} has left the building...");
+            Console.WriteLine($"{client.UserName} has left the server...");
         }
     }
 

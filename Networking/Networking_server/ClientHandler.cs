@@ -34,11 +34,10 @@ namespace Networking_server
                     NetworkStream n = tcpclient.GetStream();
                     message = JsonConvert.DeserializeObject<Message>(new BinaryReader(n).ReadString());
                     Action.CheckAction(myServer, this, message);
-                    Console.WriteLine($"{message.UserName} {message.Action} {message.UserMessage}");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    Console.WriteLine("Request failed");
                     break;
                 }
 
